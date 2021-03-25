@@ -12,7 +12,12 @@ const options = {
   },
   series: [
     {
+      name: "Enero",
       data: [1, 2, 1, 4, 3, 6],
+    },
+    {
+      name: "Febrero",
+      data: [1, 3, 3, 1, 4, 6],
     },
   ],
 };
