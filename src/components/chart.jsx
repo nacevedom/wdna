@@ -20,6 +20,9 @@ const options = {
       data: [1, 3, 3, 1, 4, 6],
     },
   ],
+  credits: {
+    enabled: false,
+  },
 };
 
 const Chart = () => (
