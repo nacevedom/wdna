@@ -19,11 +19,13 @@ ul li {
   height: 100%;
   border-radius: 15px;
   cursor: pointer;
+  transition-property: background-color;
 }
 
 ul li:hover {
   background-color: rgb(199, 199, 199);
   color: $dorado;
 
-  transition: 1s ease;
+  transition-property: background-color;
+  transition-duration: 1s;
 }

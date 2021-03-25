@@ -5,7 +5,7 @@ import HighchartsReact from "highcharts-react-official";
 
 const options = {
   chart: {
-    type: "spline",
+    type: "line",
   },
   title: {
     text: "My chart",
