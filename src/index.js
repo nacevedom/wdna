@@ -5,6 +5,9 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./assets/fonts/MerriweatherSans-Regular.ttf";
+import Temperature from "./pages/Temperature"
+import Viento from "./pages/Viento"
+
 
 ReactDOM.render(
   <React.StrictMode>

@@ -1,27 +1,18 @@
-import "./App.css";
+import React from 'react';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Navbar from "./components/navbar";
 import Header from "./components/header";
-import Chart from "./components/chart";
-import Table from "./components/table";
-import "./assets/styles/fonts.scss";
+import Temperature from './pages/Temperature'
+import Viento from './pages/Viento';
 
-function App() {
-  return (
-    <div className="App">
-      <Header />
-      <Navbar />
-      <div className="container-fluid">
-        <div className="row mx-4">
-          <div className="col-md-4">
-            <Table />
-          </div>
-          <div className="col-md-8">
-            <Chart />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+const App = () => ( 
+        
+        <BrowserRouter>
+        <Switch>
+            <Route exact path="/" component={ Temperature } />
+            <Route exact path="/v" component={ Viento } />
+        </Switch>
+        </BrowserRouter>
+    );
 
 export default App;
