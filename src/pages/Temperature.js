@@ -10,8 +10,7 @@ class Temperature extends React.Component {
   render() { 
   return (
     <div className="App">
-      <Header />
-      <Navbar />
+      
       <div className="container-fluid">
         <div className="row mx-4">
           <div className="col-md-4">
