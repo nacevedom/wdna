@@ -8,6 +8,8 @@ const Table = () => (
         <th scope="col">First</th>
         <th scope="col">Last</th>
         <th scope="col">Handle</th>
+        <th scope="col">ejemplo</th>
+        <th scope="col">ejemplo</th>
       </tr>
     </thead>
     <tbody>
@@ -16,17 +18,23 @@ const Table = () => (
         <td>Mark</td>
         <td>Otto</td>
         <td>@mdo</td>
+        <td>@mdo</td>
+        <td>@mdo</td>
       </tr>
       <tr>
         <th scope="row">2</th>
         <td>Jacob</td>
         <td>Thornton</td>
         <td>@fat</td>
+        <td>@fat</td>
+        <td>@fat</td>
       </tr>
       <tr>
         <th scope="row">3</th>
         <td>Larry</td>
         <td>the Bird</td>
+        <td>@twitter</td>
+        <td>@twitter</td>
         <td>@twitter</td>
       </tr>
     </tbody>

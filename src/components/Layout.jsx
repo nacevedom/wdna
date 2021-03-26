@@ -1,17 +1,13 @@
-import React from 'react';
-import Header from './header';
-import Navbar from './navbar';
+import React from "react";
+import Header from "./header";
 
-
-function Layout (props) {
-    //const children = props.children;
-    return (
-        <div>
-        <Header />
-        <Navbar />
-        {props.children}
-
-        </div>
-    );
-} 
+function Layout(props) {
+  //const children = props.children;
+  return (
+    <div>
+      <Header />
+      {props.children}
+    </div>
+  );
+}
 export default Layout;

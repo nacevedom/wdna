@@ -4,7 +4,7 @@ import HighchartsReact from "highcharts-react-official";
 
 const options = {
   chart: {
-    type: "line",
+    type: "column",
   },
   title: {
     text: "My chart",
@@ -24,10 +24,10 @@ const options = {
   },
 };
 
-const Chart = () => (
+const ColumnChart = () => (
   <div>
     <HighchartsReact highcharts={Highcharts} options={options} />
   </div>
 );
 
-export default Chart;
+export default ColumnChart;
