@@ -3,7 +3,10 @@ import "../assets/styles/navbar.scss";
 
 const Navbar = () => (
   <div className="container">
-    <nav className="navbar navbar-expand-lg navbar-light bg-light my-4 rounded-rectangle">
+    <nav
+      className="navbar navbar-expand-lg navbar-light my-4"
+      style={{ borderRadius: "25px", backgroundColor: "#e6e5e5" }}
+    >
       <ul className="list">
         <li>
           <a>Temperaturas</a>
