@@ -32,7 +32,7 @@ const Header = () => (
           </li>
           <li>
             <Link to="/v" className="link">
-              Prueba
+              Prueba2
             </Link>
           </li>
           <li>
