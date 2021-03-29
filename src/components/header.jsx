@@ -27,12 +27,12 @@ const Header = () => (
         <ul className="list">
           <li>
             <Link to="/" className="link">
-              Temperature
+              Prueba
             </Link>
           </li>
           <li>
             <Link to="/v" className="link">
-              Viento
+              Prueba
             </Link>
           </li>
           <li>
