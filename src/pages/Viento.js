@@ -1,6 +1,5 @@
 import "../App.css";
 import ColumnChart from "../components/ColumnChart";
-import Table from "../components/table";
 import "../assets/styles/fonts.scss";
 import React from "react";
 import TableUI from "../components/tableUI";

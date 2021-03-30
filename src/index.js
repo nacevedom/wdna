@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./routes/App";
 import reportWebVitals from "./reportWebVitals";
+import "./assets/scss/paper-dashboard.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./assets/fonts/MerriweatherSans-Regular.ttf";
 
