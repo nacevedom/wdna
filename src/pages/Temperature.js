@@ -1,9 +1,11 @@
 import "../App.css";
 import Chart from "../components/chart";
-import Table from "../components/table";
+import Tabla from "../components/table";
 import "../assets/styles/fonts.scss";
 import React from "react";
-import TableUI from "../components/tableUI";
+//import Input from "../components/input"
+
+
 
 class Temperature extends React.Component {
   render() {
@@ -12,9 +14,10 @@ class Temperature extends React.Component {
         <div className="container-fluid">
           <div className="row mx-4">
             <div className="col-md-4">
-              <TableUI />
+              
+              <Tabla />
             </div>
-            <div className="col-md-8">
+            <div className="col-md-12">
               <Chart />
             </div>
           </div>
