@@ -2,7 +2,7 @@ import "../App.css";
 import ColumnChart from "../components/ColumnChart";
 import "../assets/styles/fonts.scss";
 import React from "react";
-import TableUI from "../components/tableUI";
+
 
 class Viento extends React.Component {
   render() {

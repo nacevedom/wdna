@@ -2,7 +2,9 @@ import "../App.css";
 import Chart from "../components/chart";
 import "../assets/styles/fonts.scss";
 import React from "react";
-import TableUI from "../components/tableUI";
+//import Input from "../components/input"
+
+
 
 class Temperature extends React.Component {
   render() {
