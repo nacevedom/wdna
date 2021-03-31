@@ -21,7 +21,9 @@ import { NavLink } from "react-router-dom";
 import { Nav } from "reactstrap";
 // javascript plugin used to create scrollbars on windows
 import PerfectScrollbar from "perfect-scrollbar";
-import { NavbarToggler, NavbarBrand } from "reactstrap";
+import { NavbarBrand } from "reactstrap";
+import "../assets/css/paper-dashboard.css";
+import "../assets/css/paper-dashboard.css.map";
 
 var ps;
 
@@ -30,6 +32,13 @@ class Sidebar extends React.Component {
     super(props);
     this.activeRoute.bind(this);
     this.sidebar = React.createRef();
+    this.state = {
+      isOpen: false,
+      dropdownOpen: false,
+      color: "transparent",
+    };
+
+    this.sidebarToggle = React.createRef();
   }
   // verifies if routeName is the one active (in browser input)
   activeRoute(routeName) {
@@ -54,41 +63,38 @@ class Sidebar extends React.Component {
   }
   render() {
     return (
-      <div>
-        <div className="sidebar" data-color="black" data-active-color="blue">
-          <div className="sidebar-wrapper" ref={this.sidebar}>
-            <Nav>
-              <li>
-                <NavLink to="/" className="nav-link" activeClassName="active">
-                  prueba
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="/v" className="nav-link">
-                  prueba2
-                </NavLink>
-              </li>
-            </Nav>
-          </div>
-          <div className="navbar-toggle">
-            <button
-              type="button"
-              ref={this.sidebarToggle}
-              className="navbar-toggler"
-              onClick={() => this.openSidebar()}
-            >
-              <span className="navbar-toggler-bar bar1" />
-              <span className="navbar-toggler-bar bar2" />
-              <span className="navbar-toggler-bar bar3" />
-            </button>
-          </div>
-          <NavbarBrand />
+      <div className="sidebar" data-color="black" data-active-color="blue">
+        <div className="sidebar-wrapper" ref={this.sidebar}>
+          <Nav>
+            <li>
+              <NavLink
+                to="/chart"
+                className="nav-link"
+                activeClassName="active"
+              >
+                prueba
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/bars" className="nav-link">
+                prueba2
+              </NavLink>
+            </li>
+          </Nav>
         </div>
-        <NavbarToggler onClick={this.toggle}>
-          <span className="navbar-toggler-bar navbar-kebab" />
-          <span className="navbar-toggler-bar navbar-kebab" />
-          <span className="navbar-toggler-bar navbar-kebab" />
-        </NavbarToggler>
+        <div className="navbar-toggle">
+          <button
+            type="button"
+            ref={this.sidebarToggle}
+            className="navbar-toggler"
+            onClick={() => this.openSidebar()}
+          >
+            <span className="navbar-toggler-bar bar1" />
+            <span className="navbar-toggler-bar bar2" />
+            <span className="navbar-toggler-bar bar3" />
+          </button>
+        </div>
+        <NavbarBrand />
       </div>
     );
   }

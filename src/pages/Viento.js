@@ -7,16 +7,12 @@ import TableUI from "../components/tableUI";
 class Viento extends React.Component {
   render() {
     return (
-      <div className="App">
-        <div className="container-fluid">
-          <div className="row mx-4">
-            <div className="col-md-4">
-              <TableUI />
-            </div>
-            <div className="col-md-8">
-              <ColumnChart />
-            </div>
-          </div>
+      <div className="container-fluid">
+        <div className="col-md-12 p-5">
+          <TableUI />
+        </div>
+        <div className="col-md-12 p-4">
+          <ColumnChart />
         </div>
       </div>
     );

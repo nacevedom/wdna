@@ -21,16 +21,16 @@ import Viento from "../pages/Viento";
 
 var routes = [
   {
-    path: "/",
+    path: "/chart",
     name: "Dashboard",
     component: Temperature,
     layout: "/",
   },
   {
-    path: "/v",
-    name: "chart",
+    path: "/bars",
+    name: "Bars",
     component: Viento,
-    layout: "/v",
+    layout: "/bars",
   },
 ];
 export default routes;
