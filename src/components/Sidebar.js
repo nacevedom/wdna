@@ -24,7 +24,8 @@ import PerfectScrollbar from "perfect-scrollbar";
 import { NavbarBrand } from "reactstrap";
 import "../assets/css/paper-dashboard.css";
 import "../assets/css/paper-dashboard.css.map";
-
+import Logo from "../assets/logos/wdna_light_skin_sm.png";
+import "../assets/styles/sidebar.scss";
 var ps;
 
 class Sidebar extends React.Component {
@@ -65,7 +66,12 @@ class Sidebar extends React.Component {
     return (
       <div className="sidebar" data-color="black" data-active-color="blue">
         <div className="sidebar-wrapper" ref={this.sidebar}>
-          <Nav>
+          <Nav className="mt-0 nav">
+            <li className="minihead">
+              <a href="/">
+                <img src={Logo} alt="" />
+              </a>
+            </li>
             <li>
               <NavLink
                 to="/chart"
