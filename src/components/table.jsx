@@ -1,79 +1,122 @@
-import React from "react";
-import {
-  useTable,
-  useFilters,
-  useGlobalFilter,
-  useAsyncDebounce,
-} from "react-table";
-import { matchSorter } from "match-sorter";
+import React, { useMemo, useState, useEffect, Component } from "react";
 import "../assets/styles/table.scss";
-import Table from "react-bootstrap/Table";
+import axios from "axios";
+import { withStyles, makeStyles } from "@material-ui/core/styles";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Paper from "@material-ui/core/Paper";
 
-function CharacterCard(props) {
-  const { character } = props;
+const StyledTableCell = withStyles((theme) => ({
+  head: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+  },
+  body: {
+    fontSize: 14,
+  },
+}))(TableCell);
 
+const StyledTableRow = withStyles((theme) => ({
+  root: {
+    "&:nth-of-type(odd)": {
+      backgroundColor: theme.palette.action.hover,
+    },
+  },
+}))(TableRow);
+
+const useStyles = makeStyles({
+  table: {
+    minWidth: 700,
+  },
+});
+
+const App = () => {
+  const classes = useStyles();
+  const [product, setProduct] = useState([]);
+  const [search, setSearch] = useState("");
+
+  const getProductData = async () => {
+    try {
+      const data = await axios.get(
+        "http://meteoclim.meteoclim.com/apptrack/public/sensor/weatherstation/owner/historical?id=1&start=2021-03-30%2013:00:00&end=2021-03-30%2013:00:00"
+      );
+      console.log(data.data);
+      setProduct(data.data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    getProductData();
+  }, []);
   return (
-    <div
-      className="CharacterCard"
-      style={{ backgroundImage: `url(${character.image})` }}
-    >
-      <div className="CharacterCard__name-container text-truncate">
-        {character.description}
-      </div>
+    <div className="App">
+      <h1>Lets code tamil</h1>
+      <input
+        type="text"
+        placeholder="Search here"
+        onChange={(e) => {
+          setSearch(e.target.value);
+        }}
+      />
+      {/* {product
+        .filter((item) => {
+          if (search === "") {
+            return item;
+          } else if (item.name.toLowerCase().includes(search.toLowerCase())) {
+            return item;
+          }
+        })
+        .map((item) => {
+          return (
+            <p>
+              {item.datetime} - {item.wind}
+            </p>
+          );
+        })}{" "} */}
+      <TableContainer component={Paper}>
+        <Table className={classes.table} aria-label="customized table">
+          <TableHead>
+            <TableRow>
+              <StyledTableCell align="center">Temperaturas</StyledTableCell>
+              <StyledTableCell align="center">Product Price</StyledTableCell>
+              <StyledTableCell align="center">Datetime</StyledTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {product
+              .filter((item) => {
+                if (search === "") {
+                  return item;
+                } else if (
+                  item.id.toLowerCase().includes(search.toLowerCase())
+                ) {
+                  return item;
+                }
+              })
+              .map((item) => {
+                return (
+                  <StyledTableRow key={item.id}>
+                    <StyledTableCell align="center">{item.id}</StyledTableCell>
+                    <StyledTableCell align="center">
+                      {item.wind}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {item.datetime}
+                    </StyledTableCell>
+                  </StyledTableRow>
+                );
+              })}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
-}
-
-class App extends React.Component {
-  state = {
-    loading: true,
-    error: null,
-    data: {
-      weather: [],
-    },
-  };
-
-  componentDidMount() {
-    this.fetchCharacters();
-  }
-
-  fetchCharacters = async () => {
-    this.setState({ loading: true, error: null });
-
-    const response = await fetch(
-      "http://api.openweathermap.org/data/2.5/weather?q=London&appid=af7483e057bb688e60ade94eb3b7ac5f"
-    );
-    const data = await response.json();
-
-    this.setState({
-      data: data,
-    });
-  };
-
-  render() {
-    if (this.state.error) {
-      return "Error!";
-    }
-
-    return (
-      <div className="container">
-        <div className="App">
-          <img className="Logo" alt="Rick y Morty" />
-          <Table striped bordered hover>
-            <tbody>
-              <tr className="row">
-                {this.state.data.weather.map((character) => (
-                  <td className="col-6 col-md-3" key={character.id}>
-                    <CharacterCard character={character} />
-                  </td>
-                ))}
-              </tr>
-            </tbody>
-          </Table>
-        </div>
-      </div>
-    );
-  }
-}
+};
 
 export default App;
