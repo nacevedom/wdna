@@ -74,7 +74,7 @@ class Header extends React.Component {
   render() {
     return (
       // add or remove classes depending if we are on full-screen-maps page or not
-      <Navbar expand="lg">
+      <Navbar expand="lg" style={{ position: "fixed" }}>
         <Container fluid>
           <div className="navbar-wrapper">
             <div className="navbar-toggle">

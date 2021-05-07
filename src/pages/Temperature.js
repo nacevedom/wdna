@@ -12,7 +12,7 @@ class Temperature extends React.Component {
         <div className="p-5 col-md-12">
           <App />
         </div>
-        <div className="p-4 col-md-12">
+        <div className="p-5 col-md-12">
           <Chart />
         </div>
       </div>

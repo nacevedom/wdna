@@ -5045,17 +5045,28 @@ License - nucleoapp.com/license/
   background: rgba(200, 200, 200, 0.2);
 }
 
+.imagen {
+  background-image: url(https://wallpaperstock.net/wallpapers/thumbs1/26255wide.jpg);
+  filter: blur(8px);
+  -webkit-filter: blur(8px);
+  height: 100%;
+  width: calc(100% - 260px);
+  position: absolute;
+}
+
 .main-panel {
   position: relative;
   float: right;
   width: calc(100% - 260px);
-  background-image: url(https://wallpaperstock.net/wallpapers/thumbs1/26255wide.jpg);
+  background-image: url(https://image.freepik.com/vector-gratis/fondo-futurista-global-tecnologia-digital-tierra_1017-23323.jpg);
+  background-size: cover;
   -webkit-transition: all 0.5s cubic-bezier(0.685, 0.0473, 0.346, 1);
   -moz-transition: all 0.5s cubic-bezier(0.685, 0.0473, 0.346, 1);
   -o-transition: all 0.5s cubic-bezier(0.685, 0.0473, 0.346, 1);
   -ms-transition: all 0.5s cubic-bezier(0.685, 0.0473, 0.346, 1);
   transition: all 0.5s cubic-bezier(0.685, 0.0473, 0.346, 1);
 }
+
 .main-panel > .content {
   padding: 0 30px 30px;
   min-height: calc(100vh - 123px);

@@ -11,7 +11,7 @@ class Viento extends React.Component {
         <div className="col-md-12 p-5">
           <Table />
         </div>
-        <div className="col-md-12 p-4">
+        <div className="col-md-12 p-5">
           <ColumnChart />
         </div>
       </div>

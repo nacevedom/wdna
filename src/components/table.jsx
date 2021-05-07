@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect, Component } from "react";
+import React, { useState, useEffect } from "react";
 import "../assets/styles/table.scss";
 import axios from "axios";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
@@ -31,6 +31,14 @@ const StyledTableRow = withStyles((theme) => ({
 const useStyles = makeStyles({
   table: {
     minWidth: 700,
+    tableLayout: "fixed",
+  },
+  sticky: {
+    position: "sticky",
+    top: 0,
+  },
+  tableContainer: {
+    height: 500,
   },
 });
 
@@ -55,8 +63,7 @@ const App = () => {
     getProductData();
   }, []);
   return (
-    <div className="App">
-      <h1>Lets code tamil</h1>
+    <div className="container-fluid">
       <input
         type="text"
         placeholder="Search here"
@@ -79,13 +86,19 @@ const App = () => {
             </p>
           );
         })}{" "} */}
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} className={classes.tableContainer}>
         <Table className={classes.table} aria-label="customized table">
           <TableHead>
             <TableRow>
-              <StyledTableCell align="center">Temperaturas</StyledTableCell>
-              <StyledTableCell align="center">Product Price</StyledTableCell>
-              <StyledTableCell align="center">Datetime</StyledTableCell>
+              <StyledTableCell className={classes.sticky} align="center">
+                Temperatures
+              </StyledTableCell>
+              <StyledTableCell className={classes.sticky} align="center">
+                Wind
+              </StyledTableCell>
+              <StyledTableCell className={classes.sticky} align="center">
+                Datetime
+              </StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -101,7 +114,7 @@ const App = () => {
               })
               .map((item) => {
                 return (
-                  <StyledTableRow key={item.id}>
+                  <StyledTableRow>
                     <StyledTableCell align="center">{item.id}</StyledTableCell>
                     <StyledTableCell align="center">
                       {item.wind}
