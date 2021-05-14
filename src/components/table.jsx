@@ -28,7 +28,7 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
-const useStyles = makeStyles({
+const useStyles = (theme) => ({
   table: {
     minWidth: 700,
     tableLayout: "fixed",
@@ -42,80 +42,106 @@ const useStyles = makeStyles({
   },
 });
 
-const App = () => {
-  const classes = useStyles();
-  const [product, setProduct] = useState([]);
-  const [search, setSearch] = useState("");
-
-  const getProductData = async () => {
-    try {
-      const data = await axios.get(
-        "http://meteoclim.meteoclim.com/apptrack/public/sensor/weatherstation/owner/historical?id=1&start=2021-03-30%2013:00:00&end=2021-03-30%2013:00:00"
-      );
-      console.log(data.data);
-      setProduct(data.data);
-    } catch (e) {
-      console.log(e);
-    }
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      temp: "",
+      data: [],
+      result: [],
+    };
+    // const classes = useStyles();
+    // const [product, setProduct] = useState([]);
+    // const [search, setSearch] = useState("");
+  }
+  insertData = () => {
+    fetch(
+      "http://meteoclim.meteoclim.com/apptrack/public/sensor/weatherstation/owner/historical?id=1&start=2021-03-30%2013:00:00&end=2021-03-30%2013:00:00"
+    )
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        var result = [];
+        this.setState({
+          data: (function getResult() {
+            data.forEach((item) => {
+              result.push(item);
+            });
+            return result;
+          })(),
+          result: result,
+        });
+      });
   };
 
-  useEffect(() => {
-    getProductData();
-  }, []);
-  return (
-    <div className="container-fluid">
-      <input
-        type="text"
-        placeholder="Search here"
-        onChange={(e) => {
-          setSearch(e.target.value);
-        }}
-      />
-      {/* {product
-        .filter((item) => {
-          if (search === "") {
-            return item;
-          } else if (item.name.toLowerCase().includes(search.toLowerCase())) {
-            return item;
-          }
-        })
-        .map((item) => {
-          return (
-            <p>
-              {item.datetime} - {item.wind}
-            </p>
-          );
-        })}{" "} */}
-      <TableContainer component={Paper} className={classes.tableContainer}>
-        <Table className={classes.table} aria-label="customized table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell className={classes.sticky} align="center">
-                Temperatures
-              </StyledTableCell>
-              <StyledTableCell className={classes.sticky} align="center">
-                Wind
-              </StyledTableCell>
-              <StyledTableCell className={classes.sticky} align="center">
-                Datetime
-              </StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {product
-              .filter((item) => {
-                if (search === "") {
-                  return item;
-                } else if (
-                  item.id.toLowerCase().includes(search.toLowerCase())
-                ) {
-                  return item;
-                }
-              })
-              .map((item) => {
+  handleChange = (e) => {
+    this.setState({
+      temp: e.target.value,
+    });
+    this.filterTemp(e.target.value);
+  };
+
+  filterTemp = (temp) => {
+    this.setState({
+      result: this.state.data.filter((n) => n >= temp),
+    });
+  };
+  componentDidMount() {
+    this.insertData();
+  }
+
+  render() {
+    const { classes } = this.props;
+    return (
+      <div className="container-fluid">
+        <input
+          type="text"
+          placeholder="Search here"
+          className="form-control"
+          name="temp"
+          onChange={this.handleChange}
+          // onChange={(e) => {
+          //   setSearch(e.target.value);
+          // }}
+        />
+        {/* {product
+          .filter((item) => {
+            if (search === "") {
+              return item;
+            } else if (item.name.toLowerCase().includes(search.toLowerCase())) {
+              return item;
+            }
+          })
+          .map((item) => {
+            return (
+              <p>
+                {item.datetime} - {item.wind}
+              </p>
+            );
+          })}{" "} */}
+        <TableContainer component={Paper} className={classes.tableContainer}>
+          <Table aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell className={classes.sticky} align="center">
+                  Temperatures
+                </StyledTableCell>
+                <StyledTableCell className={classes.sticky} align="center">
+                  Wind
+                </StyledTableCell>
+                <StyledTableCell className={classes.sticky} align="center">
+                  Datetime
+                </StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {this.state.result.map((item) => {
                 return (
                   <StyledTableRow>
-                    <StyledTableCell align="center">{item.id}</StyledTableCell>
+                    <StyledTableCell align="center">
+                      {item.temperature}
+                    </StyledTableCell>
                     <StyledTableCell align="center">
                       {item.wind}
                     </StyledTableCell>
@@ -125,11 +151,12 @@ const App = () => {
                   </StyledTableRow>
                 );
               })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </div>
-  );
-};
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
+    );
+  }
+}
 
-export default App;
+export default withStyles(useStyles)(App);
