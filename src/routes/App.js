@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
+import { Router, Switch, Route, Redirect } from "react-router-dom";
 import Temperature from "../pages/Temperature";
 import Viento from "../pages/Viento";
 import Layout from "../components/Layout";
@@ -9,7 +9,7 @@ import { createBrowserHistory } from "history";
 const hist = createBrowserHistory();
 
 const App = () => (
-  <BrowserRouter history={hist} hashType="noslash">
+  <Router history={hist} hashType="noslash">
     <ScrollToTop>
       <Layout>
         <Switch>
@@ -19,7 +19,7 @@ const App = () => (
         </Switch>
       </Layout>
     </ScrollToTop>
-  </BrowserRouter>
+  </Router>
 );
 
 export default App;
