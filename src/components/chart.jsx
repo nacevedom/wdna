@@ -3,7 +3,6 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
 import DatePicker from "react-datepicker";
-import moment from "moment";
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -17,29 +16,66 @@ class Chart extends React.Component {
       result: [],
       datas: [
         {
-          name: "temperatura",
+          name: "2021-05-29",
+
           y: 30,
-          datetime: "29-05-2021",
+          datetime: new Date("2021-05-29"),
         },
         {
-          name: "temperatura",
+          name: "2021-05-29",
+
           y: 24,
-          datetime: "29-05-2021",
+          datetime: new Date("2021-05-29"),
         },
         {
-          name: "temperatura",
+          name: "2021-05-30",
+
           y: 10,
-          datetime: "30-05-2021",
+          datetime: new Date("2021-05-30"),
         },
         {
-          name: "temperatura",
+          name: "2021-05-30",
+
           y: 33,
-          datetime: "30-05-2021",
+          datetime: new Date("2021-05-30"),
         },
         {
-          name: "temperatura",
+          name: "2021-05-31",
+
           y: 37,
-          datetime: "31-05-2021",
+          datetime: new Date("2021-05-31"),
+        },
+      ],
+      datas2: [
+        {
+          name: "2021-05-29",
+
+          y: 15,
+          datetime: new Date("2021-05-29"),
+        },
+        {
+          name: "2021-05-29",
+
+          y: 29,
+          datetime: new Date("2021-05-29"),
+        },
+        {
+          name: "2021-05-30",
+
+          y: 8,
+          datetime: new Date("2021-05-30"),
+        },
+        {
+          name: "2021-05-30",
+
+          y: 30,
+          datetime: new Date("2021-05-30"),
+        },
+        {
+          name: "2021-05-31",
+
+          y: 40,
+          datetime: new Date("2021-05-31"),
         },
       ],
       chart: {
@@ -51,12 +87,25 @@ class Chart extends React.Component {
       series: [
         {
           data: [],
+
           color: "black",
+        },
+        {
+          data: [],
+          color: "red",
         },
       ],
       xAxis: [
         {
-          categories: [],
+          dateTimeLabelFormats: {
+            day: "%d %b %Y",
+          },
+          type: "datetime",
+          labels: {
+            rotation: -45,
+            //Specify the formatting of xAxis labels:
+            format: "{value:%Y-%m-%d }",
+          },
         },
       ],
 
@@ -66,10 +115,6 @@ class Chart extends React.Component {
     };
   }
 
-  handler = (data) => {
-    this.setState({ saludo: data });
-    console.log(this.state.saludo);
-  };
   componentDidMount() {
     this.insertData();
   }
@@ -81,13 +126,7 @@ class Chart extends React.Component {
 
     this.filterTemp(e.target.value);
   };
-  handleChange2 = (e) => {
-    this.setState({
-      startDate: e.target.value,
-    });
 
-    this.filterTemp(e.target.value);
-  };
   // handleChangeTime = (date1, date2) => {
   //   var dateFormat = require("dateformat");
   //   if (date1 || date2) {
@@ -116,88 +155,74 @@ class Chart extends React.Component {
       })
       .then((data) => {
         var temperatures = [];
-        // var dates = [];
-        // var categories = [];
-        // var dateFormat = require("dateformat");
-        // data.forEach((item, index) => {
-        //   temperatures.push({
-        //     name: dateFormat(item.datetime, "dd-mm-yyyy"),
-        //     x: index,
-        //     y: item.temperature,
-        //   });
-        // });
-        // console.log(temperatures);
+
+        var dateFormat = require("dateformat");
+        data.forEach((item) => {
+          temperatures.push({
+            name: dateFormat(item.datetime, "dd-mm-yyyy"),
+            date: item.datetime,
+            y: item.temperature,
+          });
+        });
 
         this.setState({
           result: data,
           series: [
             {
-              data: this.state.datas,
+              data: temperatures,
             },
+            // {
+            //   data: this.state.datas2,
+            // },
           ],
-          temperatures: temperatures,
-
           // xAxis: [
           //   {
-          //     categories: (function getResult() {
+          //     categories: (function getDates() {
           //       var dateFormat = require("dateformat");
 
-          //       data.forEach((item) => {
-          //         dates.push(dateFormat(item.datetime, "dd-mm-yyyy"));
+          //       this.state.datas2.forEach((item) => {
+          //         dates = dateFormat(item.datetime, "dd-mm-yyyy");
           //       });
 
           //       return dates;
           //     })(),
           //   },
           // ],
+          temperatures: temperatures,
         });
       });
   };
-  daterange = () => {
-    if (this.state.startDate) {
-      this.setState({
-        series: [
-          {
-            data: this.state.datas.filter(function (n) {
-              return (n.datetime = this.state.startDate);
-            }),
-          },
-        ],
-      });
-    } else {
-      console.log(this.state.dates);
-      return false;
-    }
-  };
+  // daterange = () => {
+  //   if (this.state.startDate) {
+  //     this.setState({
+  //       series: [
+  //         {
+  //           data: this.state.datas.filter(function (n) {
+  //             return (n.datetime = this.state.startDate);
+  //           }),
+  //         },
+  //       ],
+  //     });
+  //   } else {
+  //     console.log(this.state.dates);
+  //     return false;
+  //   }
+  // };
   filterTemp = (name) => {
     this.setState({
       series: [
         {
-          data: this.state.datas.filter((n) => n.y >= name),
+          data: this.state.temperatures.filter((n) => n.y >= name),
         },
+        // {
+        //   data: this.state.datas2.filter((n) => n.y >= name),
+        // },
       ],
     });
   };
 
   render() {
-    const { datas, startDate, endDate } = this.state;
-
-    // var dateFormat = require("dateformat");
-    // var datetime = dateFormat(date, "dd-mm-yyyy");
-    //       if (startDate) {
-    //         this.setState({
-    //           series: [
-    //             {
-    //               data: datas.filter(function (n) {
-    //                 return (n.datetime = datetime);
-    //               }),
-    //             },
-    //           ],
-    //         });
-    //       } else {
-    //         console.log(this.state.dates);
-    //         return false;
-    //       }
+    const { temperatures, startDate, endDate } = this.state;
 
     return (
       <div>
@@ -212,95 +237,73 @@ class Chart extends React.Component {
 
         <DatePicker
           name="startdate"
-          dateFormat="dd-MM-yyyy"
+          dateFormat="yyyy-MM-dd"
           selected={startDate}
           onChange={(date) => {
             this.setState({
               startDate: date,
             });
-            console.log(date);
+
             if (date) {
-              var dateStart = moment(date).format("DD-MM-YYYY");
               this.setState({
                 series: [
                   {
-                    data: datas.filter(function (n) {
-                      var a = n.datetime >= dateStart;
+                    data: temperatures.filter(function (n) {
+                      var datetime = new Date(n.date);
 
-                      console.log(a);
+                      var a = datetime >= date;
+
                       return a;
                     }),
                   },
+                  // {
+                  //   data: datas2.filter(function (n) {
+                  //     var b = n.datetime >= date;
+                  //     return b;
+                  //   }),
+                  // },
                 ],
               });
             } else {
               return alert("No existe ninguna fecha de entrada");
             }
-            // if (date && endDate) {
-            //   var datetime = moment(date).format("DD-MM-YYYY");
-            //   var datetime2 = moment(endDate).format("DD-MM-YYYY");
-            //   this.setState({
-            //     series: [
-            //       {
-            //         data: this.state.datas.filter(function (n) {
-            //           var a = n.datetime >= datetime;
-            //           var b = n.datetime < datetime2;
-            //           console.log(a && b);
-            //           return a && b;
-            //         }),
-            //       },
-            //     ],
-            //   });
-            // } else {
-            //   console.log("hola");
-            // }
           }}
           startDate={startDate}
           endDate={endDate}
         />
         <DatePicker
           name="enddate"
-          dateFormat="dd-MM-yyyy"
+          dateFormat="yyyy-MM-dd"
           selected={endDate}
           onChange={(date) => {
             this.setState({
               endDate: date,
             });
-            if (date) {
-              var dateEnd = moment(date).format("DD-MM-YYYY");
+
+            if (date && startDate) {
               this.setState({
                 series: [
                   {
-                    data: datas.filter(function (n) {
-                      var a = n.datetime < dateEnd;
+                    data: temperatures.filter(function (n) {
+                      var datetime = new Date(n.date);
 
-                      console.log(a);
+                      var a = datetime >= startDate && datetime <= date;
+                      // console.log(datein);
+
                       return a;
                     }),
                   },
+                  // {
+                  //   data: datas2.filter(function (n) {
+                  //     var b = n.datetime < date;
+                  //     return b;
+                  //   }),
+                  // },
                 ],
               });
             } else {
               return alert("No existe ninguna fecha de entrada");
             }
-            // if (startDate && date) {
-            //   var datetime = moment(startDate).format("DD-MM-YYYY");
-            //   var datetime2 = moment(date).format("DD-MM-YYYY");
-            //   this.setState({
-            //     series: [
-            //       {
-            //         data: this.state.datas.filter(function (n) {
-            //           var a = n.datetime >= datetime;
-            //           var b = n.datetime < datetime2;
-            //           console.log(a && b);
-            //           return a && b;
-            //         }),
-            //       },
-            //     ],
-            //   });
-            // } else {
-            //   console.log("hola");
-            // }
           }}
           startDate={startDate}
           endDate={endDate}
