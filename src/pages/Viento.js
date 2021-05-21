@@ -1,5 +1,5 @@
 import "../App.css";
-import ColumnChart from "../components/ColumnChart";
+import App from "../components/ColumnChart";
 import "../assets/styles/fonts.scss";
 import React from "react";
 import Table from "../components/table";
@@ -12,7 +12,7 @@ class Viento extends React.Component {
           <Table />
         </div>
         <div className="col-md-12 p-5">
-          <ColumnChart />
+          <App />
         </div>
       </div>
     );

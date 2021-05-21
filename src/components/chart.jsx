@@ -95,19 +95,19 @@ class Chart extends React.Component {
           color: "red",
         },
       ],
-      xAxis: [
-        {
-          dateTimeLabelFormats: {
-            day: "%d %b %Y",
-          },
-          type: "datetime",
-          labels: {
-            rotation: -45,
-            //Specify the formatting of xAxis labels:
-            format: "{value:%Y-%m-%d }",
-          },
-        },
-      ],
+      // xAxis: [
+      //   {
+      //     dateTimeLabelFormats: {
+      //       day: "%d %b %Y",
+      //     },
+      //     type: "datetime",
+      //     labels: {
+      //       rotation: -45,
+      //       //Specify the formatting of xAxis labels:
+      //       format: "{value:%Y-%m-%d }",
+      //     },
+      //   },
+      // ],
 
       credits: {
         enabled: false,

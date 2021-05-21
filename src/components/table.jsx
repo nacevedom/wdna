@@ -27,6 +27,7 @@ function GlobalFilter({
       Search:{" "}
       <input
         value={value || ""}
+        className="form-control w-25 pb-2"
         onChange={(e) => {
           setValue(e.target.value);
           onChange(e.target.value);
@@ -325,70 +326,90 @@ function Table({ columns, data }) {
           />
         </div>
       </div>
-      <table
-        {...getTableProps()}
-        border={1}
-        className="table"
-        style={{
-          borderCollapse: "collapse",
-          overflow: "scroll",
-          width: "100%",
-        }}
-      >
-        <thead>
-          {headerGroups.map((group) => (
-            <tr {...group.getHeaderGroupProps()}>
-              {group.headers.map((column) => (
-                <th {...column.getHeaderProps()}>
-                  {column.render("Header")}
-
-                  <div>{column.canFilter ? column.render("Filter") : null}</div>
-                </th>
-              ))}
-            </tr>
-          ))}
-          <tr>
-            <th
-              className="celdas"
-              style={{
-                textAlign: "left",
-              }}
-            ></th>
-          </tr>
-        </thead>
-        <tbody
-          {...getTableBodyProps()}
+      <div style={{ overflow: "auto" }} className="table-responsive">
+        <table
+          {...getTableProps()}
+          border={1}
+          className="table"
           style={{
+            borderCollapse: "collapse",
             overflow: "scroll",
+            width: "100%",
           }}
         >
-          {page.map((row, i) => {
-            prepareRow(row);
-            return (
-              <tr {...row.getRowProps()}>
-                {row.cells.map((cell) => {
-                  return (
-                    <td className="celdas" {...cell.getCellProps()}>
-                      {cell.render("Cell")}
-                    </td>
-                  );
-                })}
+          <thead>
+            {headerGroups.map((group) => (
+              <tr {...group.getHeaderGroupProps()}>
+                {group.headers.map((column) => (
+                  <th {...column.getHeaderProps()}>
+                    {column.render("Header")}
+
+                    <div>
+                      {column.canFilter ? column.render("Filter") : null}
+                    </div>
+                  </th>
+                ))}
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
+            ))}
+            <tr>
+              <th
+                className="celdas"
+                style={{
+                  textAlign: "left",
+                }}
+              ></th>
+            </tr>
+          </thead>
+          <tbody
+            {...getTableBodyProps()}
+            style={{
+              overflow: "scroll",
+            }}
+          >
+            {page.map((row, i) => {
+              prepareRow(row);
+              return (
+                <tr {...row.getRowProps()}>
+                  {row.cells.map((cell) => {
+                    return (
+                      <td className="celdas" {...cell.getCellProps()}>
+                        {cell.render("Cell")}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
       <div>
-        <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+        <button
+          className="btn btn-light"
+          onClick={() => gotoPage(0)}
+          disabled={!canPreviousPage}
+        >
           {"<<"}
         </button>{" "}
-        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
+        <button
+          className="btn btn-light"
+          onClick={() => previousPage()}
+          disabled={!canPreviousPage}
+        >
           {"<"}
         </button>{" "}
-        <button onClick={() => nextPage()} disabled={!canNextPage}>
+        <button
+          className="btn btn-light"
+          onClick={() => nextPage()}
+          disabled={!canNextPage}
+        >
           {">"}
         </button>{" "}
-        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+        <button
+          className="btn btn-light"
+          onClick={() => gotoPage(pageCount - 1)}
+          disabled={!canNextPage}
+        >
           {">>"}
         </button>{" "}
         <span>
@@ -397,20 +418,25 @@ function Table({ columns, data }) {
             {pageIndex + 1} of {pageOptions.length}
           </strong>{" "}
         </span>
-        <span>
-          | Go to page:{" "}
-          <input
-            type="number"
-            defaultValue={pageIndex + 1}
-            onChange={(e) => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0;
-              gotoPage(page);
-            }}
-            style={{ width: "100px" }}
-          />
-        </span>{" "}
+        <div style={{ display: "inline" }} className="">
+          <span>
+            | Go to page:{" "}
+            <input
+              type="number"
+              className="form-control"
+              defaultValue={pageIndex + 1}
+              onChange={(e) => {
+                const page = e.target.value ? Number(e.target.value) - 1 : 0;
+                gotoPage(page);
+              }}
+              style={{ width: "100px", display: "inline-block" }}
+            />
+          </span>{" "}
+        </div>
         <select
           value={pageSize}
+          className="form-select"
+          style={{ width: "150px", display: "inline-block" }}
           onChange={(e) => {
             setPageSize(Number(e.target.value));
           }}
