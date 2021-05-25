@@ -120,14 +120,16 @@ function dateBetweenFilterFn(rows, id, filterValues) {
   if (ed || sd) {
     return rows.filter((r) => {
       var time = new Date(r.values[id]);
+      let a = null;
 
       if (ed && sd) {
-        return time >= sd && time <= ed;
+        a = time >= sd && time <= ed;
       } else if (sd) {
-        return time >= sd;
+        a = time >= sd;
       } else if (ed) {
-        return time <= ed;
+        a = time <= ed;
       }
+      return a;
     });
   } else {
     return rows;
@@ -263,22 +265,22 @@ function Table({ columns, data }) {
       />
     );
   }
-  const filterTypes = React.useMemo(
-    () => ({
-      dateBetween: dateBetweenFilterFn,
-      text: (rows, id, filterValue) => {
-        return rows.filter((row) => {
-          const rowValue = row.values[id];
-          return rowValue !== undefined
-            ? String(rowValue)
-                .toLowerCase()
-                .startsWith(String(filterValue).toLowerCase())
-            : true;
-        });
-      },
-    }),
-    []
-  );
+  // const filterTypes = React.useMemo(
+  //   () => ({
+  //     dateBetween: dateBetweenFilterFn,
+  //     text: (rows, id, filterValue) => {
+  //       return rows.filter((row) => {
+  //         const rowValue = row.values[id];
+  //         return rowValue !== undefined
+  //           ? String(rowValue)
+  //               .toLowerCase()
+  //               .startsWith(String(filterValue).toLowerCase())
+  //           : true;
+  //       });
+  //     },
+  //   }),
+  //   []
+  // );
 
   const {
     getTableProps,
