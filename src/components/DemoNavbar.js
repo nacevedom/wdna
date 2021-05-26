@@ -17,10 +17,8 @@
 
 */
 import React from "react";
-import { Link } from "react-router-dom";
-import { Collapse, Navbar, NavbarBrand, Container } from "reactstrap";
 
-import routes from "../routes/routes";
+import { Collapse, Navbar, NavbarBrand, Container } from "reactstrap";
 
 class Header extends React.Component {
   constructor(props) {

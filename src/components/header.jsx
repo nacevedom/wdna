@@ -1,6 +1,6 @@
 import React from "react";
 import "../assets/styles/header.scss";
-import Logo from "../assets/logos/wdna_light_skin_sm.png";
+// import Logo from "../assets/logos/wdna_light_skin_sm.png";
 
 const Header = () => (
   <div className="container-fluid my-4">
