@@ -86,9 +86,7 @@ export default class App extends React.Component {
   }
   componentDidMount() {
     this._isMounted = true;
-
     this.insertData2();
-    this.insertData();
   }
   componentWillUnmount() {
     this._isMounted = false;
@@ -119,9 +117,11 @@ export default class App extends React.Component {
           dataCord: data2.data,
         });
       }
+      console.log(data2);
     } catch (e) {
       console.log(e);
     }
+    this.insertData();
   };
   insertResult = async () => {
     const { dataTemp, dataCord } = this.state;
@@ -157,6 +157,7 @@ export default class App extends React.Component {
             message: item.locality,
             iconSize: [30, 30],
             temp: temp[i++],
+            id: item.unique_id,
           },
           geometry: {
             type: "Point",
@@ -168,7 +169,7 @@ export default class App extends React.Component {
         });
       }
     });
-    console.log(i);
+
     this.setState({
       data: {
         features: result,
@@ -200,26 +201,29 @@ export default class App extends React.Component {
       var el = document.createElement("div");
       el.className = "marker";
       el.style.backgroundColor = (function colortemp() {
-        // if (marker.properties.temp <= 15) {
-        //   return "green";
-        // } else if (
-        //   marker.properties.temp >= 20 &&
-        //   marker.properties.temp < 30
-        // ) {
-        //   return "yellow";
-        // } else if (marker.properties.temp >= 30) {
-        //   return "orange";
-        // } else {
-        //   alert("no hay temperatura valida");
-        // }
-        return "orange";
+        if (marker.properties.id) {
+        }
+        if (marker.properties.temp < 15) {
+          return "green";
+        } else if (
+          marker.properties.temp >= 15 &&
+          marker.properties.temp < 21
+        ) {
+          return "yellow";
+        } else if (marker.properties.temp >= 21) {
+          return "orange";
+        } else {
+          return "orange";
+        }
       })();
       el.style.width = marker.properties.iconSize[0] + "px";
       el.style.height = marker.properties.iconSize[1] + "px";
       el.style.backgroundSize = "100%";
 
       el.addEventListener("click", function () {
-        window.alert(marker.properties.temp && marker.properties.message);
+        window.alert(
+          "Temp: " + marker.properties.temp + "\n" + marker.properties.message
+        );
       });
 
       // Add markers to the map.
@@ -231,7 +235,7 @@ export default class App extends React.Component {
     const { lng, lat, zoom } = this.state;
     return (
       <div>
-        <div className="">
+        <div className="text-light">
           Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
         </div>
         <div ref={this.mapContainer} className="map-container" />
