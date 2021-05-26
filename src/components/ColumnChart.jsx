@@ -196,7 +196,7 @@ export default class App extends React.Component {
 
     result.forEach((marker) => {
       // Create a DOM element for each marker.
-
+      //cosascasascasascasascasas
       var el = document.createElement("div");
       el.className = "marker";
       el.style.backgroundColor = (function colortemp() {
