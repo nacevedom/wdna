@@ -30,6 +30,46 @@ export default class App extends React.Component {
     this.state = {
       _isMounted: false,
       temperatures: [],
+      prueba: [
+        {
+          zonas: [
+            {
+              zona_1: {
+                id: "aemet-9562X",
+              },
+            },
+            // {
+            //   zona_2: {
+            //     id: "aemet-8520X",
+            //   },
+            // },
+            // {
+            //   zona_4: {
+            //     id: "aemet-8523X",
+            //   },
+            // },
+            // {
+            {
+              zona_5: [
+                {
+                  id: "aemet-8489X",
+                },
+                { id: "aemet-9563X" },
+              ],
+            },
+
+            // {
+            //   zona_20: [
+            //     { id: "aemet-8050X" },
+            //     { id: "aemet-8058X" },
+            //     { id: "aemet-8058Y" },
+            //     { id: "aemet-8072Y" },
+            //   ],
+            // },
+          ],
+        },
+      ],
+
       dataCord: [],
       dataTemp: [],
       lng: -0.376805,
@@ -149,6 +189,52 @@ export default class App extends React.Component {
       temp.push(n.temperature);
     });
 
+    var zonas = {
+      "aemet-8337X": "zona 15",
+      "aemet-7244X": "zona 29",
+      "aemet-7247X": "zona 27",
+      "aemet-7261X": "zona 30",
+      "aemet-8005X": "zona 21",
+      "aemet-8008Y": "zona 21",
+      "aemet-8013X": "zona 28",
+      "aemet-8018X": "zona 28",
+      "aemet-8019": "zona 26",
+      "aemet-8025": " zona 26",
+      "aemet-8050X": "zona 20",
+      "aemet-8057C": "zona 19",
+      "aemet-8058X": "zona 20",
+      "aemet-8058Y": "zona 20",
+      "aemet-8059C": "zona 22",
+      "aemet-8072Y": "zona 20",
+      "aemet-8193E": "zona 14",
+      "aemet-8203O": "zona 14",
+      "aemet-8270X": "zona 15",
+      "aemet-8283X": "zona 18",
+      "aemet-8293X": "zona 17",
+      "aemet-8300X": "zona 17",
+      "aemet-8309X": "zona 11",
+      "aemet-8319X": "zona 15",
+      "aemet-8325X": "zona 13",
+      "aemet-8381X": "zona 10",
+      "aemet-8395X": "zona 10",
+      "aemet-8409X": "zona 12",
+      "aemet-8414A": "zona 13",
+      "aemet-8416X": "zona 13",
+      "aemet-8416Y": "zona 13",
+      "aemet-8446Y": "zona 9",
+      "aemet-8472A": "zona 6",
+      "aemet-8489X": "zona 5",
+      "aemet-8492X": "zona 7",
+      "aemet-8500A": "zona 8",
+      "aemet-8503Y": "zona 8",
+      "aemet-8520X": "zona 2",
+      "aemet-8523X": "zona 4",
+      "aemet-9562X": "zona 1",
+      "aemet-9563X": "zona 5",
+      "aemet-8439X": "zona 7",
+    };
+
+    console.log(this.state.prueba);
     dataCord.forEach((item) => {
       if (item.state === "Comunidad Valenciana") {
         result.push({
@@ -158,6 +244,13 @@ export default class App extends React.Component {
             iconSize: [30, 30],
             temp: temp[i++],
             id: item.unique_id,
+            zona: (function getzone() {
+              for (var clave in zonas) {
+                if (item.unique_id === clave) {
+                  return zonas[clave];
+                }
+              }
+            })(),
           },
           geometry: {
             type: "Point",
@@ -179,7 +272,7 @@ export default class App extends React.Component {
     this.insertmap(result);
   };
   insertmap = (result) => {
-    const { lng, lat, zoom } = this.state;
+    const { lng, lat, zoom, prueba } = this.state;
     const map = new mapboxgl.Map({
       container: this.mapContainer.current,
       style: "mapbox://styles/mapbox/streets-v11",
@@ -201,6 +294,13 @@ export default class App extends React.Component {
       var el = document.createElement("div");
       el.className = "marker";
       el.style.backgroundColor = (function colortemp() {
+        prueba.forEach((item) => {
+          // for (let i = 0; i < item.zonas.length; i++) {
+          //   if (item.zonas[i] === marker.properties.) {
+          //   }
+          // }
+          // console.log(item.zonas[0]);
+        });
         if (marker.properties.id) {
         }
         if (marker.properties.temp < 15) {
@@ -222,7 +322,14 @@ export default class App extends React.Component {
 
       el.addEventListener("click", function () {
         window.alert(
-          "Temp: " + marker.properties.temp + "\n" + marker.properties.message
+          "Temp: " +
+            marker.properties.temp +
+            "\n" +
+            marker.properties.message +
+            "\n" +
+            marker.properties.zona +
+            "\n" +
+            marker.properties.id
         );
       });
 
