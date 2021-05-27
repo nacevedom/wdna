@@ -1,83 +1,22 @@
 import React from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-
+import axios from "axios";
 import DatePicker from "react-datepicker";
-
+import moment from "moment";
 import "react-datepicker/dist/react-datepicker.css";
+import Switch from "react-switch";
 
 class Chart extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      _isMounted: false,
       temperatures: [],
       dates: [],
       result: [],
-      datas: [
-        {
-          name: "2021-05-29",
-
-          y: 30,
-          datetime: new Date("2021-05-29"),
-        },
-        {
-          name: "2021-05-29",
-
-          y: 24,
-          datetime: new Date("2021-05-29"),
-        },
-        {
-          name: "2021-05-30",
-
-          y: 10,
-          datetime: new Date("2021-05-30"),
-        },
-        {
-          name: "2021-05-30",
-
-          y: 33,
-          datetime: new Date("2021-05-30"),
-        },
-        {
-          name: "2021-05-31",
-
-          y: 37,
-          datetime: new Date("2021-05-31"),
-        },
-      ],
-      datas2: [
-        {
-          name: "2021-05-29",
-
-          y: 15,
-          datetime: new Date("2021-05-29"),
-        },
-        {
-          name: "2021-05-29",
-
-          y: 29,
-          datetime: new Date("2021-05-29"),
-        },
-        {
-          name: "2021-05-30",
-
-          y: 8,
-          datetime: new Date("2021-05-30"),
-        },
-        {
-          name: "2021-05-30",
-
-          y: 30,
-          datetime: new Date("2021-05-30"),
-        },
-        {
-          name: "2021-05-31",
-
-          y: 40,
-          datetime: new Date("2021-05-31"),
-        },
-      ],
+      checked: false,
       chart: {
         type: "line",
       },
@@ -95,36 +34,38 @@ class Chart extends React.Component {
           color: "red",
         },
       ],
-      // xAxis: [
-      //   {
-      //     dateTimeLabelFormats: {
-      //       day: "%d %b %Y",
-      //     },
-      //     type: "datetime",
-      //     labels: {
-      //       rotation: -45,
-      //       //Specify the formatting of xAxis labels:
-      //       format: "{value:%Y-%m-%d }",
-      //     },
-      //   },
-      // ],
-
       credits: {
         enabled: false,
       },
     };
+    this.handleChangeSwitch = this.handleChangeSwitch.bind(this);
   }
 
   componentDidMount() {
+    this._isMounted = true;
+    if (this.state.checked) {
+      setInterval(() => {
+        alert("alert");
+      }, 8000);
+    }
     this.insertData();
   }
 
+  componentWillMount() {
+    this._isMounted = false;
+  }
   handleChange = (e) => {
     this.setState({
       name: e.target.value,
     });
 
     this.filterTemp(e.target.value);
+  };
+
+  handleChangeSwitch = (checked) => {
+    this.setState({
+      checked: checked,
+    });
   };
 
   // handleChangeTime = (date1, date2) => {
@@ -146,52 +87,62 @@ class Chart extends React.Component {
   //   }
   // };
 
-  insertData = () => {
-    fetch(
-      "http://meteoclim.meteoclim.com/apptrack/public/sensor/weatherstation/owner/historical?id=1&start=2021-03-30%2013:00:00&end=2021-03-30%2013:00:00"
-    )
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        var temperatures = [];
+  insertData = async () => {
+    var dateFormat = require("dateformat");
+    var date = new Date();
 
-        var dateFormat = require("dateformat");
-        data.forEach((item) => {
-          temperatures.push({
-            name: dateFormat(item.datetime, "dd-mm-yyyy"),
-            date: item.datetime,
-            y: item.temperature,
-          });
-        });
+    var subs = moment().subtract(3, "hours");
+    var minute = subs.minutes();
 
-        this.setState({
-          result: data,
-          series: [
-            {
-              data: temperatures,
-            },
-            // {
-            //   data: this.state.datas2,
-            // },
-          ],
-          // xAxis: [
-          //   {
-          //     categories: (function getDates() {
-          //       var dateFormat = require("dateformat");
+    var startdate = subs.subtract(minute, "minutes").format("YYYY-MM-DDTHH:mm");
 
-          //       this.state.datas2.forEach((item) => {
-          //         dates = dateFormat(item.datetime, "dd-mm-yyyy");
-          //       });
+    var enddate = dateFormat(date, "isoDateTime");
 
-          //       return dates;
-          //     })(),
-          //   },
-          // ],
-          temperatures: temperatures,
-        });
+    try {
+      const data = await axios.get(
+        `http://meteoclim.meteoclim.com/apptrack/public/sensor/weatherstation/owner/historical?id=1&start=${startdate}&end=${enddate}`
+      );
+
+      const data2 = await axios.get(
+        "http://meteoclim.meteoclim.com/apptrack/public/sensor/weatherstation/listallwithinfo?id=1"
+      );
+
+      var a = [];
+
+      data2.data.forEach((item) => {
+        if (item.state === "Comunidad Valenciana") {
+          a.push(item.unique_id);
+        }
       });
+
+      var temperatures = [];
+
+      for (let i = 0; i <= a.length; i++) {
+        data.data.forEach((item) => {
+          if (item.id === a[i]) {
+            temperatures.push({
+              name: dateFormat(item.datetime, "dd-mm-yyyy"),
+              date: item.datetime,
+              y: item.temperature,
+            });
+          }
+        });
+      }
+
+      this.setState({
+        result: data,
+        series: [
+          {
+            data: temperatures,
+          },
+        ],
+        temperatures: temperatures,
+      });
+    } catch (e) {
+      console.log(e);
+    }
   };
+  // };
   // daterange = () => {
   //   if (this.state.startDate) {
   //     this.setState({
@@ -222,7 +173,8 @@ class Chart extends React.Component {
   };
 
   render() {
-    const { temperatures, startDate, endDate } = this.state;
+    const { temperatures, startDate, endDate, checked } = this.state;
+    console.log(this.state.checked);
 
     return (
       <div>
@@ -309,6 +261,10 @@ class Chart extends React.Component {
           endDate={endDate}
           minDate={startDate}
         />
+        <label>
+          <span>Switch with default style</span>
+          <Switch onChange={this.handleChangeSwitch} checked={checked} />
+        </label>
       </div>
     );
   }

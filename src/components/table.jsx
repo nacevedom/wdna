@@ -10,6 +10,7 @@ import "../assets/styles/table.scss";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import "react-datepicker/dist/react-datepicker.css";
+import moment from "moment";
 
 function GlobalFilter({
   preGlobalFilteredRows,
@@ -489,12 +490,44 @@ function App() {
 
   const [product, setProduct] = useState([]);
   const getProductData = async () => {
+    var dateFormat = require("dateformat");
+    var date = new Date();
+
+    var subs = moment().subtract(3, "hours");
+    var minute = subs.minutes();
+
+    var startdate = subs.subtract(minute, "minutes").format("YYYY-MM-DDTHH:mm");
+
+    var enddate = dateFormat(date, "isoDateTime");
+    var link = `http://meteoclim.meteoclim.com/apptrack/public/sensor/weatherstation/owner/historical?id=1&start=${startdate}&end=${enddate}`;
+    console.log(link);
     try {
       const data = await axios.get(
-        "http://meteoclim.meteoclim.com/apptrack/public/sensor/weatherstation/owner/historical?id=1&start=2021-03-27%2013:00:00&end=2021-03-30%2013:00:00"
+        `http://meteoclim.meteoclim.com/apptrack/public/sensor/weatherstation/owner/historical?id=1&start=${startdate}&end=${enddate}`
+      );
+      const data2 = await axios.get(
+        "http://meteoclim.meteoclim.com/apptrack/public/sensor/weatherstation/listallwithinfo?id=1"
       );
 
-      setProduct(data.data);
+      var a = [];
+
+      data2.data.forEach((item) => {
+        if (item.state === "Comunidad Valenciana") {
+          a.push(item.unique_id);
+        }
+      });
+
+      var b = [];
+
+      for (let i = 0; i <= a.length; i++) {
+        data.data.forEach((item) => {
+          if (item.id === a[i]) {
+            b.push(item);
+          }
+        });
+      }
+
+      setProduct(b);
     } catch (e) {
       console.log(e);
     }
