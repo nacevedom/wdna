@@ -6,23 +6,23 @@ import moment from "moment";
 mapboxgl.accessToken =
   "pk.eyJ1IjoibmFjZXZlZG9tIiwiYSI6ImNrb3d1cGFuajA5dXoydm1wdDZsbDEzMjAifQ.U9HqbhNdNMc0PJuI6dygaQ";
 
-export const Fetchdata = async () => {
-  const data = await axios.get(
-    "http://meteoclim.meteoclim.com/apptrack/public/sensor/weatherstation/owner/historical?id=1&start=2021-03-30%2013:00:00&end=2021-03-30%2013:00:00"
-  );
+// export const Fetchdata = async () => {
+//   const data = await axios.get(
+//     "http://meteoclim.meteoclim.com/apptrack/public/sensor/weatherstation/owner/historical?id=1&start=2021-03-30%2013:00:00&end=2021-03-30%2013:00:00"
+//   );
 
-  this.setState({
-    dataTemp: data.data,
-  });
+//   this.setState({
+//     dataTemp: data.data,
+//   });
 
-  const data2 = await axios.get(
-    "http://meteoclim.meteoclim.com/apptrack/public/sensor/weatherstation/listallwithinfo?id=1"
-  );
+//   const data2 = await axios.get(
+//     "http://meteoclim.meteoclim.com/apptrack/public/sensor/weatherstation/listallwithinfo?id=1"
+//   );
 
-  this.setState({
-    dataCord: data2.data,
-  });
-};
+//   this.setState({
+//     dataCord: data2.data,
+//   });
+// };
 
 export default class App extends React.Component {
   constructor(props) {
@@ -31,45 +31,7 @@ export default class App extends React.Component {
       _isMounted: false,
       temperatures: [],
       zonas: require("./zonasjosep.json"),
-      prueba: [
-        {
-          zonas: [
-            {
-              zona_1: {
-                id: "aemet-9562X",
-              },
-            },
-            // {
-            //   zona_2: {
-            //     id: "aemet-8520X",
-            //   },
-            // },
-            // {
-            //   zona_4: {
-            //     id: "aemet-8523X",
-            //   },
-            // },
-            // {
-            {
-              zona_5: [
-                {
-                  id: "aemet-8489X",
-                },
-                { id: "aemet-9563X" },
-              ],
-            },
-
-          // {
-          //   zona_20: [
-          //     { id: "aemet-8050X" },
-          //     { id: "aemet-8058X" },
-          //     { id: "aemet-8058Y" },
-          //     { id: "aemet-8072Y" },
-          //   ],
-          // },
-        ],
-      
-
+      hora: [],
       dataCord: [],
       dataTemp: [],
       lng: -0.376805,
@@ -78,48 +40,6 @@ export default class App extends React.Component {
       data: {
         features: [],
       },
-      // geojson: {
-      //   type: "FeatureCollection",
-      //   features: [
-      //     {
-      //       type: "Feature",
-      //       properties: {
-
-      //         message: "Foo",
-      //         iconSize: [40, 40],
-      //         temp: 15,
-      //       },
-      //       geometry: {
-      //         type: "Point",
-      //         coordinates: [-0.375807, 39.4705],
-      //       },
-      //     },
-      //     {
-      //       type: "Feature",
-      //       properties: {
-      //         message: "Bar",
-      //         iconSize: [40, 40],
-      //         temp: 30,
-      //       },
-      //       geometry: {
-      //         type: "Point",
-      //         coordinates: [-0.375805, 38.4702],
-      //       },
-      //     },
-      //     {
-      //       type: "Feature",
-      //       properties: {
-      //         message: "Baz",
-      //         iconSize: [40, 40],
-      //         temp: 30,
-      //       },
-      //       geometry: {
-      //         type: "Point",
-      //         coordinates: [-0.4333, 39.15],
-      //       },
-      //     },
-      //   ],
-      // },
     };
 
     this.mapContainer = React.createRef();
@@ -143,7 +63,7 @@ export default class App extends React.Component {
     var enddate = dateFormat(date, "isoDateTime");
     try {
       const data = await axios.get(
-        `http://meteoclim.meteoclim.com/apptrack/public/sensor/weatherstation/owner/historical?id=1&start=${startdate}&end=${enddate}`
+        `http://meteoclim.meteoclim.com/apptrack/public/sensor/weatherstation/owner/historical?id=1&start=2021-05-25%204:00:00&end=2021-05-25%204:00:00`
       );
       if (this._isMounted) {
         this.setState({
@@ -172,11 +92,12 @@ export default class App extends React.Component {
     this.insertData();
   };
   insertResult = async () => {
-    const { dataTemp, dataCord, prueba, datajson } = this.state;
+    const { dataTemp, dataCord, hora } = this.state;
 
     var result = [];
     var temp = [];
     var i = 0;
+    var j = 0;
     var a = [];
     var b = [];
     dataCord.forEach((item) => {
@@ -192,11 +113,15 @@ export default class App extends React.Component {
         }
       });
     }
-
+    console.log(b);
     b.forEach((n) => {
       temp.push(n.temperature);
     });
-
+    console.log(temp);
+    b.forEach((n) => {
+      var date = moment(n.datetime).subtract(2, "hours");
+      hora.push(moment(date).format("HH"));
+    });
     const { zonas } = this.state;
 
     dataCord.forEach((item) => {
@@ -207,13 +132,12 @@ export default class App extends React.Component {
             message: item.locality,
             iconSize: [30, 30],
             temp: temp[i++],
+            date: hora[j++],
             id: item.unique_id,
             zona: (function getzone() {
-              console.log(datajson.data);
-              for (i in datajson.data) {
-                for (let j = 0; j < datajson.data.length; j++) {
-                  if (datajson.data[i]) {
-                  }
+              for (var clave in zonas) {
+                if (item.unique_id === clave) {
+                  return zonas[clave];
                 }
               }
             })(),
@@ -261,19 +185,403 @@ export default class App extends React.Component {
       var el = document.createElement("div");
       el.className = "marker";
       el.style.backgroundColor = (function colortemp() {
-        if (marker.properties.id) {
-        }
-        if (marker.properties.temp < 15) {
-          return "green";
-        } else if (
-          marker.properties.temp >= 15 &&
-          marker.properties.temp < 21
-        ) {
-          return "yellow";
-        } else if (marker.properties.temp >= 21) {
-          return "orange";
+        if (marker.properties.date >= 0 && marker.properties.date <= 6) {
+          if (marker.properties.zona === "zona 1") {
+            if (marker.properties.temp >= 20) {
+              return "red";
+            }
+            if (marker.properties.temp >= 18 && marker.properties.temp < 20) {
+              return "orange";
+            }
+            if (marker.properties.temp >= 16.5 && marker.properties.temp < 18) {
+              return "yellow";
+            } else {
+              return "green";
+            }
+          }
+          if (marker.properties.zona === "zona 2") {
+            if (marker.properties.temp >= 21) {
+              return "red";
+            }
+            if (marker.properties.temp >= 19 && marker.properties.temp < 21) {
+              return "orange";
+            }
+            if (marker.properties.temp >= 18 && marker.properties.temp < 19) {
+              return "yellow";
+            } else {
+              return "green";
+            }
+          }
+          if (marker.properties.zona === "zona 3") {
+            if (marker.properties.temp >= 24) {
+              return "red";
+            }
+            if (marker.properties.temp >= 22.5 && marker.properties.temp < 24) {
+              return "orange";
+            }
+            if (
+              marker.properties.temp >= 21.5 &&
+              marker.properties.temp < 22.5
+            ) {
+              return "yellow";
+            } else {
+              return "green";
+            }
+          }
+          if (marker.properties.zona === "zona 4") {
+            if (marker.properties.temp >= 26) {
+              return "red";
+            }
+            if (marker.properties.temp >= 24 && marker.properties.temp < 26) {
+              return "orange";
+            }
+            if (marker.properties.temp >= 22.5 && marker.properties.temp < 24) {
+              return "yellow";
+            } else {
+              return "green";
+            }
+          }
+          if (marker.properties.zona === "zona 5") {
+            if (marker.properties.temp >= 24.5) {
+              return "red";
+            }
+            if (marker.properties.temp >= 23 && marker.properties.temp < 24.5) {
+              return "orange";
+            }
+            if (marker.properties.temp >= 22 && marker.properties.temp < 23) {
+              return "yellow";
+            } else {
+              return "green";
+            }
+          }
+          if (marker.properties.zona === "zona 6") {
+            if (marker.properties.temp >= 21) {
+              return "red";
+            }
+            if (marker.properties.temp >= 19 && marker.properties.temp < 21) {
+              return "orange";
+            }
+            if (marker.properties.temp >= 18 && marker.properties.temp < 19) {
+              return "yellow";
+            } else {
+              return "green";
+            }
+          }
+          if (marker.properties.zona === "zona 7") {
+            if (marker.properties.temp >= 23.5) {
+              return "red";
+            }
+            if (marker.properties.temp >= 21 && marker.properties.temp < 23.5) {
+              return "orange";
+            }
+            if (marker.properties.temp >= 20 && marker.properties.temp < 21) {
+              return "yellow";
+            } else {
+              return "green";
+            }
+          }
+          if (marker.properties.zona === "zona 8") {
+            if (marker.properties.temp >= 21.5) {
+              return "red";
+            }
+            if (
+              marker.properties.temp >= 19.5 &&
+              marker.properties.temp < 21.5
+            ) {
+              return "orange";
+            }
+            if (
+              marker.properties.temp >= 18.5 &&
+              marker.properties.temp < 19.5
+            ) {
+              return "yellow";
+            } else {
+              return "green";
+            }
+          }
+          if (marker.properties.zona === "zona 9") {
+            if (marker.properties.temp >= 22) {
+              return "red";
+            }
+            if (marker.properties.temp >= 21 && marker.properties.temp < 22) {
+              return "orange";
+            }
+            if (marker.properties.temp >= 20 && marker.properties.temp < 21) {
+              return "yellow";
+            } else {
+              return "green";
+            }
+          }
+          if (marker.properties.zona === "zona 10") {
+            if (marker.properties.temp >= 19) {
+              return "red";
+            }
+            if (marker.properties.temp >= 17 && marker.properties.temp < 19) {
+              return "orange";
+            }
+            if (marker.properties.temp >= 16 && marker.properties.temp < 17) {
+              return "yellow";
+            } else {
+              return "green";
+            }
+          }
+          if (marker.properties.zona === "zona 11") {
+            if (marker.properties.temp >= 21) {
+              return "red";
+            }
+            if (marker.properties.temp >= 19 && marker.properties.temp < 21) {
+              return "orange";
+            }
+            if (marker.properties.temp >= 18 && marker.properties.temp < 19) {
+              return "yellow";
+            } else {
+              return "green";
+            }
+          }
+          if (marker.properties.zona === "zona 12") {
+            if (marker.properties.temp >= 23) {
+              return "red";
+            }
+            if (marker.properties.temp >= 21.5 && marker.properties.temp < 23) {
+              return "orange";
+            }
+            if (marker.properties.temp >= 21 && marker.properties.temp < 21.5) {
+              return "yellow";
+            } else {
+              return "green";
+            }
+          }
+          if (marker.properties.zona === "zona 13") {
+            if (marker.properties.temp >= 23) {
+              return "red";
+            }
+            if (marker.properties.temp >= 21.5 && marker.properties.temp < 23) {
+              return "orange";
+            }
+            if (
+              marker.properties.temp >= 20.5 &&
+              marker.properties.temp < 21.5
+            ) {
+              return "yellow";
+            } else {
+              return "green";
+            }
+          }
+          if (marker.properties.zona === "zona 14") {
+            if (marker.properties.temp >= 25) {
+              return "red";
+            }
+            if (marker.properties.temp >= 23 && marker.properties.temp < 25) {
+              return "orange";
+            }
+            if (marker.properties.temp >= 22.5 && marker.properties.temp < 23) {
+              return "yellow";
+            } else {
+              return "green";
+            }
+          }
+          if (marker.properties.zona === "zona 15") {
+            if (marker.properties.temp >= 20.5) {
+              return "red";
+            }
+            if (marker.properties.temp >= 19 && marker.properties.temp < 20.5) {
+              return "orange";
+            }
+            if (marker.properties.temp >= 18 && marker.properties.temp < 19) {
+              return "yellow";
+            } else {
+              return "green";
+            }
+          }
+          if (marker.properties.zona === "zona 16") {
+            if (marker.properties.temp >= 23.5) {
+              return "red";
+            }
+            if (marker.properties.temp >= 21 && marker.properties.temp < 23.5) {
+              return "orange";
+            }
+            if (marker.properties.temp >= 20 && marker.properties.temp < 21) {
+              return "yellow";
+            } else {
+              return "green";
+            }
+          }
+          if (marker.properties.zona === "zona 17") {
+            if (marker.properties.temp >= 23) {
+              return "red";
+            }
+            if (marker.properties.temp >= 21.5 && marker.properties.temp < 23) {
+              return "orange";
+            }
+            if (
+              marker.properties.temp >= 20.5 &&
+              marker.properties.temp < 21.5
+            ) {
+              return "yellow";
+            } else {
+              return "green";
+            }
+          }
+          if (marker.properties.zona === "zona 18") {
+            if (marker.properties.temp >= 24.5) {
+              return "red";
+            }
+            if (marker.properties.temp >= 23 && marker.properties.temp < 24.5) {
+              return "orange";
+            }
+            if (marker.properties.temp >= 22.5 && marker.properties.temp < 23) {
+              return "yellow";
+            } else {
+              return "green";
+            }
+          }
+          if (marker.properties.zona === "zona 19") {
+            if (marker.properties.temp >= 24) {
+              return "red";
+            }
+            if (marker.properties.temp >= 22 && marker.properties.temp < 24) {
+              return "orange";
+            }
+            if (marker.properties.temp >= 21 && marker.properties.temp < 22) {
+              return "yellow";
+            } else {
+              return "green";
+            }
+          }
+          if (marker.properties.zona === "zona 20") {
+            if (marker.properties.temp >= 25) {
+              return "red";
+            }
+            if (marker.properties.temp >= 23.5 && marker.properties.temp < 25) {
+              return "orange";
+            }
+            if (
+              marker.properties.temp >= 22.5 &&
+              marker.properties.temp < 23.5
+            ) {
+              return "yellow";
+            } else {
+              return "green";
+            }
+          }
+          if (marker.properties.zona === "zona 21") {
+            if (marker.properties.temp >= 24.5) {
+              return "red";
+            }
+            if (
+              marker.properties.temp >= 22.5 &&
+              marker.properties.temp < 24.5
+            ) {
+              return "orange";
+            }
+            if (
+              marker.properties.temp >= 21.5 &&
+              marker.properties.temp < 22.5
+            ) {
+              return "yellow";
+            } else {
+              return "green";
+            }
+          }
+          if (marker.properties.zona === "zona 22") {
+            if (marker.properties.temp >= 24) {
+              return "red";
+            }
+            if (marker.properties.temp >= 22 && marker.properties.temp < 24) {
+              return "orange";
+            }
+            if (marker.properties.temp >= 21 && marker.properties.temp < 22) {
+              return "yellow";
+            } else {
+              return "green";
+            }
+          }
+          if (marker.properties.zona === "zona 23") {
+            if (marker.properties.temp >= 22) {
+              return "red";
+            }
+            if (marker.properties.temp >= 20 && marker.properties.temp < 22) {
+              return "orange";
+            }
+            if (marker.properties.temp >= 19 && marker.properties.temp < 20) {
+              return "yellow";
+            } else {
+              return "green";
+            }
+          }
+          if (marker.properties.zona === "zona 24") {
+            if (marker.properties.temp >= 25.5) {
+              return "red";
+            }
+            if (marker.properties.temp >= 24 && marker.properties.temp < 25.5) {
+              return "orange";
+            }
+            if (marker.properties.temp >= 23 && marker.properties.temp < 24) {
+              return "yellow";
+            } else {
+              return "green";
+            }
+          }
+          if (marker.properties.zona === "zona 25") {
+            if (marker.properties.temp >= 24) {
+              return "red";
+            }
+            if (marker.properties.temp >= 21 && marker.properties.temp < 24) {
+              return "orange";
+            }
+            if (marker.properties.temp >= 20 && marker.properties.temp < 21) {
+              return "yellow";
+            } else {
+              return "green";
+            }
+          }
+          if (marker.properties.zona === "zona 26") {
+            if (marker.properties.temp >= 21) {
+              return "red";
+            }
+            if (marker.properties.temp >= 19 && marker.properties.temp < 21) {
+              return "orange";
+            }
+            if (marker.properties.temp >= 18 && marker.properties.temp < 19) {
+              return "yellow";
+            } else {
+              return "green";
+            }
+          }
+          if (marker.properties.zona === "zona 27") {
+            if (marker.properties.temp >= 25) {
+              return "red";
+            }
+            if (marker.properties.temp >= 23.5 && marker.properties.temp < 25) {
+              return "orange";
+            }
+            if (
+              marker.properties.temp >= 22.5 &&
+              marker.properties.temp < 23.5
+            ) {
+              return "yellow";
+            } else {
+              return "green";
+            }
+          }
+          if (marker.properties.zona === "zona 28") {
+            if (marker.properties.temp >= 24) {
+              return "red";
+            }
+            if (marker.properties.temp >= 22.5 && marker.properties.temp < 24) {
+              return "orange";
+            }
+            if (
+              marker.properties.temp >= 21.5 &&
+              marker.properties.temp < 22.5
+            ) {
+              return "yellow";
+            } else {
+              return "green";
+            }
+          }
         } else {
-          return "orange";
+          return "green";
         }
       })();
       el.style.width = marker.properties.iconSize[0] + "px";
