@@ -30,29 +30,34 @@ export default class App extends React.Component {
     this.state = {
       _isMounted: false,
       temperatures: [],
-      datajson: require("./zonas.json"),
-
-      prueba: {
-        zonas: [
-          {
-            id: "aemet-9562X",
-            zona: "zona_1",
-          },
-          // {
-          //   zona_2: {
-          //     id: "aemet-8520X",
-          //   },
-          // },
-          // {
-          //   zona_4: {
-          //     id: "aemet-8523X",
-          //   },
-          // },
-          // {
-          {
-            id: ["aemet-8489X", "aemet-9563X"],
-            zona: "zona_5",
-          },
+      zonas: require("./zonasjosep.json"),
+      prueba: [
+        {
+          zonas: [
+            {
+              zona_1: {
+                id: "aemet-9562X",
+              },
+            },
+            // {
+            //   zona_2: {
+            //     id: "aemet-8520X",
+            //   },
+            // },
+            // {
+            //   zona_4: {
+            //     id: "aemet-8523X",
+            //   },
+            // },
+            // {
+            {
+              zona_5: [
+                {
+                  id: "aemet-8489X",
+                },
+                { id: "aemet-9563X" },
+              ],
+            },
 
           // {
           //   zona_20: [
@@ -63,7 +68,7 @@ export default class App extends React.Component {
           //   ],
           // },
         ],
-      },
+      
 
       dataCord: [],
       dataTemp: [],
@@ -192,50 +197,7 @@ export default class App extends React.Component {
       temp.push(n.temperature);
     });
 
-    // var zonas = {
-    //   "aemet-8337X": "zona 15",
-    //   "aemet-7244X": "zona 29",
-    //   "aemet-7247X": "zona 27",
-    //   "aemet-7261X": "zona 30",
-    //   "aemet-8005X": "zona 21",
-    //   "aemet-8008Y": "zona 21",
-    //   "aemet-8013X": "zona 28",
-    //   "aemet-8018X": "zona 28",
-    //   "aemet-8019": "zona 26",
-    //   "aemet-8025": " zona 26",
-    //   "aemet-8050X": "zona 20",
-    //   "aemet-8057C": "zona 19",
-    //   "aemet-8058X": "zona 20",
-    //   "aemet-8058Y": "zona 20",
-    //   "aemet-8059C": "zona 22",
-    //   "aemet-8072Y": "zona 20",
-    //   "aemet-8193E": "zona 14",
-    //   "aemet-8203O": "zona 14",
-    //   "aemet-8270X": "zona 15",
-    //   "aemet-8283X": "zona 18",
-    //   "aemet-8293X": "zona 17",
-    //   "aemet-8300X": "zona 17",
-    //   "aemet-8309X": "zona 11",
-    //   "aemet-8319X": "zona 15",
-    //   "aemet-8325X": "zona 13",
-    //   "aemet-8381X": "zona 10",
-    //   "aemet-8395X": "zona 10",
-    //   "aemet-8409X": "zona 12",
-    //   "aemet-8414A": "zona 13",
-    //   "aemet-8416X": "zona 13",
-    //   "aemet-8416Y": "zona 13",
-    //   "aemet-8446Y": "zona 9",
-    //   "aemet-8472A": "zona 6",
-    //   "aemet-8489X": "zona 5",
-    //   "aemet-8492X": "zona 7",
-    //   "aemet-8500A": "zona 8",
-    //   "aemet-8503Y": "zona 8",
-    //   "aemet-8520X": "zona 2",
-    //   "aemet-8523X": "zona 4",
-    //   "aemet-9562X": "zona 1",
-    //   "aemet-9563X": "zona 5",
-    //   "aemet-8439X": "zona 7",
-    // };
+    const { zonas } = this.state;
 
     dataCord.forEach((item) => {
       if (item.state === "Comunidad Valenciana") {
@@ -299,13 +261,6 @@ export default class App extends React.Component {
       var el = document.createElement("div");
       el.className = "marker";
       el.style.backgroundColor = (function colortemp() {
-        // prueba.forEach((item) => {
-        // for (let i = 0; i < item.zonas.length; i++) {
-        //   if (item.zonas[i] === marker.properties.) {
-        //   }
-        // }
-        // console.log(item.zonas[0]);
-        // });
         if (marker.properties.id) {
         }
         if (marker.properties.temp < 15) {
