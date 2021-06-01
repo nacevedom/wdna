@@ -3,6 +3,7 @@ import mapboxgl from "mapbox-gl";
 import axios from "axios";
 import "../App.css";
 import moment from "moment";
+import Papa from "papaparse";
 mapboxgl.accessToken =
   "pk.eyJ1IjoibmFjZXZlZG9tIiwiYSI6ImNrb3d1cGFuajA5dXoydm1wdDZsbDEzMjAifQ.U9HqbhNdNMc0PJuI6dygaQ";
 
@@ -29,9 +30,11 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       _isMounted: false,
+      dataCSV: [],
       temperatures: [],
       zonas: require("./zonasjosep.json"),
       hora: [],
+      final: [],
       dataCord: [],
       dataTemp: [],
       lng: -0.376805,
@@ -41,6 +44,7 @@ export default class App extends React.Component {
         features: [],
       },
     };
+    this.getData = this.getData.bind(this);
 
     this.mapContainer = React.createRef();
   }
@@ -50,7 +54,30 @@ export default class App extends React.Component {
   }
   componentWillUnmount() {
     this._isMounted = false;
+    this.getCsvData();
   }
+
+  fetchCsv() {
+    return fetch("./Umbrals_temperatura_2019").then(function (response) {
+      let reader = response.body.getReader();
+      let decoder = new TextDecoder("utf-8");
+
+      return reader.read().then(function (result) {
+        return decoder.decode(result.value);
+      });
+    });
+  }
+  getData(result) {
+    this.setState({ dataCSV: result.data });
+  }
+  async getCsvData() {
+    let csvData = await this.fetchCsv();
+
+    Papa.parse(csvData, {
+      complete: this.getData,
+    });
+  }
+
   insertData = async () => {
     var dateFormat = require("dateformat");
     var date = new Date();
@@ -92,12 +119,12 @@ export default class App extends React.Component {
     this.insertData();
   };
   insertResult = async () => {
-    const { dataTemp, dataCord, hora } = this.state;
-
+    const { dataTemp, dataCord, zonas, hora, final } = this.state;
+    var idtemp = [];
     var result = [];
     var temp = [];
-    var i = 0;
-    var j = 0;
+    var k = 0;
+    var l = 0;
     var a = [];
     var b = [];
     dataCord.forEach((item) => {
@@ -113,17 +140,38 @@ export default class App extends React.Component {
         }
       });
     }
-    console.log(b);
+
     b.forEach((n) => {
-      temp.push(n.temperature);
+      idtemp.push({
+        id: n.id,
+        temperature: n.temperature,
+      });
     });
-    console.log(temp);
+
     b.forEach((n) => {
       var date = moment(n.datetime).subtract(2, "hours");
       hora.push(moment(date).format("HH"));
     });
-    const { zonas } = this.state;
 
+    for (var i = 0; i < idtemp.length; i++) {
+      let igual = false;
+      console.log("ENTRO2");
+      for (var j = 0; j < a.length; j++) {
+        // console.log("ENTRO3");
+        if (a[j] === idtemp[i].id) {
+          igual = true;
+          console.log(a[j]);
+          console.log(idtemp[i].id);
+          console.log(igual);
+        }
+      }
+
+      if (igual) {
+        console.log(idtemp[i].temperature);
+        final.push(idtemp[i].temperature);
+      }
+    }
+    console.log(final);
     dataCord.forEach((item) => {
       if (item.state === "Comunidad Valenciana") {
         result.push({
@@ -131,8 +179,8 @@ export default class App extends React.Component {
           properties: {
             message: item.locality,
             iconSize: [30, 30],
-            temp: temp[i++],
-            date: hora[j++],
+            temp: final[l++],
+            date: hora[k++],
             id: item.unique_id,
             zona: (function getzone() {
               for (var clave in zonas) {
@@ -152,17 +200,17 @@ export default class App extends React.Component {
         });
       }
     });
-
+    console.log(result);
+    console.log(final);
     this.setState({
       data: {
         features: result,
       },
     });
-    console.log(result);
     this.insertmap(result);
   };
   insertmap = (result) => {
-    const { lng, lat, zoom, prueba } = this.state;
+    const { lng, lat, zoom } = this.state;
 
     const map = new mapboxgl.Map({
       container: this.mapContainer.current,
@@ -581,7 +629,7 @@ export default class App extends React.Component {
             }
           }
         } else {
-          return "green";
+          return "pink";
         }
       })();
       el.style.width = marker.properties.iconSize[0] + "px";
